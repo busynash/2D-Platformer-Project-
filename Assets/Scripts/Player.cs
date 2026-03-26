@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
     public float moveSpeed = 4f; //Player speed left and right
 
     //Jump variables
+    public int coins;
     public float jumpForce = 8f;
     public int jumpCountValue = 1; //counter for the double jump (2 total)
     public int extraJump; //actual jump amount (curr 0)
