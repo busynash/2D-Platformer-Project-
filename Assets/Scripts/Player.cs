@@ -15,13 +15,13 @@ public class Player : MonoBehaviour
     //Internal variables 
     private Rigidbody2D rb;  //Reference to Player rb
     private bool isGrounded; //True if player is touching the ground
-
+    private Animator animator;  //Reference to Player animator
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); //player rigidbody is encapsulated here
-
+        animator = GetComponent<Animator>(); //player animator is encapsulated here
         extraJump = jumpCountValue; //sets the extraJump up at the game launch so it's automatically set to 1 by default
     }
 
@@ -48,6 +48,36 @@ public class Player : MonoBehaviour
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 extraJump--;
                 isGrounded = false;
+            }
+        }
+
+
+        SetAnimation(moveInput);    //calls the function to set the animation based on the player's movement and grounded state
+    }
+
+    // Decides which animation to play based on the player's movement input and whether they are grounded or not
+    private void SetAnimation(float moveInput)
+    {
+        if (isGrounded)                         // on the ground
+        {
+            if (moveInput == 0)                 // not moving
+            {
+                animator.Play("Player_Idle");   // play idle animation
+            }
+            else                                // moving
+            {
+                animator.Play("Player_Run");    //play run animation        
+            }
+        }
+        else                                    // in the air (not grounded)
+        {
+            if (rb.linearVelocity.y > 0)        // ascending
+            {
+                animator.Play("Player_Jump");   // play jump animation
+            }
+            else                                // descending
+            {
+                animator.Play("Player_Fall");   // play fall animation
             }
         }
     }
