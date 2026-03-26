@@ -438,6 +438,7 @@ MonoBehaviour:
   moveSpeed: 4
   health: 100
   jumpForce: 8
+  jumpCount: 0
   groundCheck: {fileID: 1913657170}
   groundCheckRadius: 0.2
   groundLayer:

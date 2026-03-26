@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     //Jump variables
     public int health = 100;
     public float jumpForce = 8f;
+    public int jumpCountValue = 1; //counter for the double jump (2 total)
+    public int extraJump; //actual jump amount (curr 0)
     public Transform groundCheck; //empty objects at Players feet
     public float groundCheckRadius = 0.2f; //size of the circle used to detect ground
     public LayerMask groundLayer;  //Which layer the ground is on
@@ -20,29 +22,47 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+
+   
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        rb = GetComponent<Rigidbody2D>(); //player rigidbody is encapsulated here
+
+        extraJump = jumpCountValue; //sets the extraJump up at the game launch so it's automatically set to 1 by default
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //horizontal movement 
+        //horizontal movement
         //get the input from keyboard A/D or left and right arrows
         float moveInput = Input.GetAxis("Horizontal");
         //apply horizontal speed 
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
         //jump movement
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            //first jump (standard ifGrounded)
+            if (isGrounded)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            }
+            //second jump (every update resets the extrajump counter and brings it back to 1)
+            else if (extraJump > 0)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                extraJump--;
+                isGrounded = false;
+            }
         }
     }
 
     private void FixedUpdate()
     {
+        //constant ground check restraint
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
@@ -74,4 +94,6 @@ public class Player : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 }
+
+
 
