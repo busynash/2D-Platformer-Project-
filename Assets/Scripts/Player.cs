@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public int coins = 0;
     public int health = 100;
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
