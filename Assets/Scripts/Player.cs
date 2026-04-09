@@ -21,7 +21,10 @@ public class Player : MonoBehaviour
 
     public int extraJumpValue = 1;
     private int extraJumps;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,14 +51,20 @@ public class Player : MonoBehaviour
 
         if(isGrounded)
         {
+            coyoteTimeCounter = coyoteTime;
             extraJumps = extraJumpValue;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            if (coyoteTimeCounter > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                coyoteTimeCounter = 0;
             }
             else if (extraJumps > 0)
             {
