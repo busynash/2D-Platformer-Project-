@@ -21,7 +21,10 @@ public class Player : MonoBehaviour
 
     public int extraJumpValue = 1;
     private int extraJumps;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,19 +37,34 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+
         float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
         if(isGrounded)
         {
+            coyoteTimeCounter = coyoteTime;
             extraJumps = extraJumpValue;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            if (coyoteTimeCounter > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                coyoteTimeCounter = 0;
             }
             else if (extraJumps > 0)
             {
@@ -115,5 +133,14 @@ public class Player : MonoBehaviour
     private void Die()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Strawberry")
+        {
+            extraJumps = 2;
+            Destroy(collision.gameObject);
+        }
     }
 }
