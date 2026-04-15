@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
     public int extraJumpValue = 1;
     private int extraJumps;
 
+    public float jumpBufferTime = 0.15f;
+    private float jumpBufferCounter;
+
     public float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
@@ -61,15 +64,27 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+        
+
+        if (jumpBufferCounter > 0f)
+        {
             if (coyoteTimeCounter > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 coyoteTimeCounter = 0;
+                jumpBufferCounter = 0f;
             }
             else if (extraJumps > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 extraJumps--;
+                jumpBufferCounter = 0f;
             }
         }
         SetAnimation(moveInput);
