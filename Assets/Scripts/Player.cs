@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
     public int coins = 0;
     public int health = 100;
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 7.5f;
+    public float jumpContinuesForce = 0.85f;
     public Transform groundCheck;
     public float groundCheckRadios = 0.2f;
     public LayerMask groundLayer;
@@ -87,6 +88,12 @@ public class Player : MonoBehaviour
                 jumpBufferCounter = 0f;
             }
         }
+
+        if(Input.GetKey(KeyCode.Space) && rb.linearVelocityY > 0)
+        {
+            rb.AddForceY(jumpContinuesForce);
+        }
+
         SetAnimation(moveInput);
 
         healthImage.fillAmount = health / 100f;
