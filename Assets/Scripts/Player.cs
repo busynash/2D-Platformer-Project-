@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
     public int coins = 0;
     public int health = 100;
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 7.5f;
+    public float jumpContinuesForce = 0.85f;
     public Transform groundCheck;
     public float groundCheckRadios = 0.2f;
     public LayerMask groundLayer;
@@ -21,7 +22,13 @@ public class Player : MonoBehaviour
 
     public int extraJumpValue = 1;
     private int extraJumps;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public float jumpBufferTime = 0.15f;
+    private float jumpBufferCounter;
+
+    public float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,29 +41,72 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+
         float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
         if(isGrounded)
         {
+            coyoteTimeCounter = coyoteTime;
             extraJumps = extraJumpValue;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+        
+
+        if (jumpBufferCounter > 0f)
+        {
+            if (coyoteTimeCounter > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                coyoteTimeCounter = 0;
+                jumpBufferCounter = 0f;
             }
             else if (extraJumps > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 extraJumps--;
+                jumpBufferCounter = 0f;
             }
         }
+
+        if(Input.GetKey(KeyCode.Space) && rb.linearVelocityY > 0)
+        {
+            rb.AddForceY(jumpContinuesForce);
+        }
+
+
+        healthImage.fillAmount = health / 100f;
+
         SetAnimation(moveInput);
 
-        //healthImage.fillAmount = health / 100f;
+        if (rb.linearVelocityY < 0)
+        {
+            rb.gravityScale = 3f;
+        }
+        else
+        {
+            rb.gravityScale = 2f;
+        }
 
     }
 
@@ -120,5 +170,14 @@ public class Player : MonoBehaviour
     private void Die()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Strawberry")
+        {
+            extraJumps = 2;
+            Destroy(collision.gameObject);
+        }
     }
 }
