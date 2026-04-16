@@ -56,7 +56,8 @@ public class Player : MonoBehaviour
         }
         SetAnimation(moveInput);
 
-        healthImage.fillAmount = health / 100f;
+        //healthImage.fillAmount = health / 100f;
+
     }
 
     private void FixedUpdate()
@@ -103,6 +104,10 @@ public class Player : MonoBehaviour
                 Die();
             }    
         }
+        else if (collision.gameObject.tag == "BouncePad")
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce * 2);
+        }
     }
 
     private IEnumerator BlinkRed()
@@ -114,6 +119,6 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 }
