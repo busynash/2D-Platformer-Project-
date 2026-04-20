@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,9 @@ public class Player : MonoBehaviour
     public float groundCheckRadios = 0.2f;
     public LayerMask groundLayer;
     public Image healthImage;
+
+    public AudioClip jumpClip;
+    public AudioClip hurtClip;
 
     private Rigidbody2D rb;
     private bool isGrounded;
@@ -29,11 +33,14 @@ public class Player : MonoBehaviour
     public float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         extraJumps = extraJumpValue;
     }
@@ -66,6 +73,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpBufferCounter = jumpBufferTime;
+            PlaySFX(jumpClip);
         }
         else
         {
@@ -145,6 +153,7 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "Damage")
         {
+            PlaySFX(hurtClip);
             health -= 25;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             StartCoroutine(BlinkRed());
@@ -179,5 +188,12 @@ public class Player : MonoBehaviour
             extraJumps = 2;
             Destroy(collision.gameObject);
         }
+    }
+
+    public void PlaySFX(AudioClip audioClip, float volume = 1.0f)
+    {
+        audioSource.clip = audioClip;
+        audioSource.volume = volume;
+        audioSource.Play();
     }
 }

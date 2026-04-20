@@ -7,6 +7,8 @@ public class Coin : MonoBehaviour
 
     public int coinsToGive = 1;
 
+    public AudioClip coinClip;
+
     private void Start()
     {
         coinText = GameObject.FindWithTag("CoinText").GetComponent<TextMeshProUGUI>();
@@ -17,6 +19,9 @@ public class Coin : MonoBehaviour
         {
             // Increment the player's coin count
             Player player = collision.gameObject.GetComponent<Player>();
+
+            // PLay coin collect sound
+            player.PlaySFX(coinClip, 0.4f);
 
             // Add 1 to the player's coin count
             player.coins += coinsToGive;
