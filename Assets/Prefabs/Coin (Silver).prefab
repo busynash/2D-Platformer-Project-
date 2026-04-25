@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7183970781358269805}
   - component: {fileID: 4834840330135457544}
-  - component: {fileID: 6872377065085210347}
   - component: {fileID: 5986080404089799475}
   - component: {fileID: 8446268674424248881}
+  - component: {fileID: 6872377065085210347}
   m_Layer: 0
   m_Name: Coin (Silver)
   m_TagString: Untagged
@@ -94,19 +94,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &6872377065085210347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7301642479004756595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e2558f69dcce242ba3acee9c4932a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Coin
-  coinsToGive: 3
 --- !u!61 &5986080404089799475
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175,3 +162,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6872377065085210347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301642479004756595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e2558f69dcce242ba3acee9c4932a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Coin
+  coinsToGive: 3

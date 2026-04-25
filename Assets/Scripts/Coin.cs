@@ -22,7 +22,7 @@ public class Coin : MonoBehaviour
             player.coins += coinsToGive;
 
             coinText.text = player.coins.ToString(); //turns integer to string for coinUI
-            
+
             // Destroy the coin object
             Destroy(gameObject);
         }
